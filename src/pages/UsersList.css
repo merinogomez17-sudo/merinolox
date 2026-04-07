@@ -1,0 +1,192 @@
+.users-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.access-denied {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 4rem auto;
+  padding: 4rem;
+  max-width: 500px;
+  text-align: center;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.access-denied h2 {
+  margin-top: 1.5rem;
+  color: #f8fafc;
+}
+
+.access-denied p {
+  color: #94a3b8;
+  margin-top: 0.5rem;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(14, 165, 233, 0.1);
+  color: var(--accent);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid rgba(14, 165, 233, 0.2);
+}
+
+.row-self td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.accent-text {
+  color: var(--accent);
+}
+
+.tag.minimal {
+  background: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.4rem;
+}
+
+.activity-badge {
+  display: inline-block;
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.role-selector {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.role-selector:hover:not(:disabled) {
+  border-color: rgba(255,255,255,0.3);
+}
+
+.role-selector:focus {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+}
+
+.role-selector:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.role-selector option {
+  background: #111827;
+}
+
+.small-btn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Modal de Rendimiento (Modo Espía) */
+.perf-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(10, 15, 25, 0.85);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.perf-modal-content {
+  width: 90%;
+  max-width: 900px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: linear-gradient(145deg, #1e293b, #0f172a);
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  padding: 2.5rem;
+  border-radius: 20px;
+}
+
+.perf-modal-body {
+  margin-top: 1rem;
+}
+
+.mini-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.mini-stat-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.mini-stat-card.blue-tint { border-bottom: 2px solid #3b82f6; }
+.mini-stat-card.green-tint { border-bottom: 2px solid #10b981; }
+.mini-stat-card.red-tint { border-bottom: 2px solid #ef4444; }
+
+.mini-stat-card h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+}
+
+.mini-stat-card .bignum {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+}
+
+.mini-table-container {
+  background: rgba(15, 23, 42, 0.4);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+  overflow: hidden;
+}
+
+.custom-spreadsheet.mini th {
+  padding: 0.75rem 1rem;
+}
+
+.custom-spreadsheet.mini td {
+  padding: 1rem;
+  color: #cbd5e1;
+}
+
+.status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.1);
+}
+
+.status-badge[data-status="cotización"] { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+.status-badge[data-status="cierre"] { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+.status-badge[data-status="perdido"] { background: rgba(239, 68, 68, 0.2); color: #f87171; }
