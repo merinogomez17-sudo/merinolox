@@ -4,8 +4,9 @@
  * Type 2: Real-time Update (New Client / Note change)
  * Type 3: Sale Closed (Cierre)
  * Type 4: Lead Lost (Perdido)
+ * Type 5: Reminder Set
  */
-export const triggerN8nWebhook = async (type: 1 | 2 | 3 | 4, data: any) => {
+export const triggerN8nWebhook = async (type: 1 | 2 | 3 | 4 | 5, data: any) => {
   const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL;
   
   if (!webhookUrl) {

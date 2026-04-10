@@ -3,7 +3,6 @@ import { useAuth } from '../context/AuthContext';
 import { Users, TrendingUp, PhoneCall, AlertCircle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { supabase } from '../lib/supabase';
-import { triggerN8nWebhook } from '../lib/webhookUtils';
 import './Dashboard.css';
 
 export const Dashboard: React.FC = () => {
@@ -49,7 +48,7 @@ export const Dashboard: React.FC = () => {
         query = query.eq('vendedor_id', selectedUserId);
       }
       
-      const { data, error } = await query;
+      const { data } = await query;
       
       if (data) {
         setTotalClientes(data.length);

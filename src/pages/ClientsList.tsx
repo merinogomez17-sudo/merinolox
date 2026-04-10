@@ -295,10 +295,6 @@ export const ClientsList: React.FC = () => {
 
   const submitNewClient = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newClient = {
-      ...newClientData,
-      vendedor_id: user?.id,
-    };
 
     const { data, error } = await supabase
       .from('clients')
@@ -321,7 +317,7 @@ export const ClientsList: React.FC = () => {
         client_info: {
           id: data.id,
           ...newClientData,
-          vendedor_id: user.id
+          vendedor_id: user?.id
         },
         change_details: {
           field: 'all (creation)',
@@ -341,6 +337,9 @@ export const ClientsList: React.FC = () => {
         status: 'contacto inicial', 
         notes: '',
         follow_up: '',
+        reminder_date: '',
+        reminder_note: '',
+        reminder_active: false,
         first_contact_date: new Date().toISOString().split('T')[0]
       });
     }
@@ -826,10 +825,10 @@ export const ClientsList: React.FC = () => {
                     ? new Date(client.last_contact_date).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }) 
                     : '---'}
                 </td>
-                <td style={{ textAlign: 'center', opacity: 0.7, fontSize: '0.8rem', fontWeight: getDaysSinContacto(client.last_contact_date) >= 7 ? 'bold' : 'normal' }}>
+                <td style={{ textAlign: 'center', opacity: 0.7, fontSize: '0.8rem', fontWeight: (typeof getDaysSinContacto(client.last_contact_date) === 'number' && (getDaysSinContacto(client.last_contact_date) as number) >= 7) ? 'bold' : 'normal' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      {getDaysSinContacto(client.last_contact_date) >= 7 && <AlertTriangle size={14} style={{ color: '#f59e0b' }} />}
+                      {(typeof getDaysSinContacto(client.last_contact_date) === 'number' && (getDaysSinContacto(client.last_contact_date) as number) >= 7) && <AlertTriangle size={14} style={{ color: '#f59e0b' }} />}
                       {getDaysSinContacto(client.last_contact_date)}
                     </div>
                     {client.last_contact_date && (
