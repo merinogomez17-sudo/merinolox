@@ -176,6 +176,28 @@ button {
   background-color: var(--bg-primary);
 }
 
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+}
+
+@media (max-width: 1024px) {
+  .content-area {
+    padding: 1.5rem 1rem;
+  }
+
+  .sidebar-overlay {
+    display: block;
+  }
+}
+
 /* ANIMATIONS */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }

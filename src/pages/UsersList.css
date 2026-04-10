@@ -116,9 +116,9 @@
 }
 
 .perf-modal-content {
-  width: 90%;
-  max-width: 900px;
-  max-height: 85vh;
+  width: 95%;
+  max-width: 1200px;
+  max-height: 90vh;
   overflow-y: auto;
   background: linear-gradient(145deg, #1e293b, #0f172a);
   border: 1px solid rgba(14, 165, 233, 0.2);
@@ -174,8 +174,19 @@
 }
 
 .custom-spreadsheet.mini td {
-  padding: 1rem;
+  padding: 0.85rem 1rem;
   color: #cbd5e1;
+  font-size: 0.85rem;
+}
+
+.custom-spreadsheet.mini tr.row-perdido td {
+  background: rgba(220, 38, 38, 0.1) !important;
+  color: #fecaca;
+}
+
+.custom-spreadsheet.mini tr.row-interes td {
+  background: rgba(22, 163, 74, 0.1) !important;
+  color: #bbf7d0;
 }
 
 .status-badge {

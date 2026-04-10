@@ -1,39 +1,56 @@
 .topbar {
   height: 70px;
+  padding: 0 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
-  border-bottom: 1px solid var(--border-color);
   background: rgba(11, 15, 25, 0.8);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  position: sticky;
-  top: 0;
+  border-bottom: 1px solid var(--border-color);
   z-index: 5;
 }
 
+.mobile-menu-btn {
+  display: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px;
+  border-radius: 8px;
+  color: var(--text-primary);
+  cursor: pointer;
+  margin-right: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .topbar {
+    padding: 0 1rem;
+  }
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
 .search-bar {
+  flex: 1;
+  max-width: 500px;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 999px;
-  width: 400px;
-  background: rgba(0,0,0,0.2) !important;
 }
 
 .search-bar input {
-  background: transparent;
+  flex: 1;
+  background: none;
   border: none;
   color: var(--text-primary);
-  width: 100%;
+  font-size: 0.875rem;
   outline: none;
   font-family: inherit;
-}
-
-.search-bar input::placeholder {
-  color: var(--text-muted);
 }
 
 .topbar-actions {

@@ -1,19 +1,27 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, UserCircle } from 'lucide-react';
+import { LayoutDashboard, Users, UserCircle, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './Sidebar.css';
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { user } = useAuth();
 
   return (
-    <aside className="sidebar glass-panel">
+    <aside className={`sidebar glass-panel ${isOpen ? 'open' : ''}`}>
       <div className="sidebar-header">
         <div className="logo">
           <div className="logo-icon">FM</div>
           <span className="logo-text">Flexomarket</span>
         </div>
+        <button className="mobile-close-btn" onClick={onClose}>
+          <X size={24} />
+        </button>
       </div>
       
       <nav className="sidebar-nav">
@@ -32,7 +40,7 @@ export const Sidebar: React.FC = () => {
           <Users size={20} />
           <span>Mis Clientes</span>
         </NavLink>
-
+        
         {user?.role === 'admin' && (
           <NavLink 
             to="/users" 

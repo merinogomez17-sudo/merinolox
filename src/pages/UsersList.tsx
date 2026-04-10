@@ -101,6 +101,23 @@ export const UsersList: React.FC = () => {
     return date.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
+  const getDaysTranscurridos = (dateStr: string) => {
+    if (!dateStr) return '-';
+    const start = new Date(dateStr);
+    const today = new Date();
+    start.setHours(0,0,0,0);
+    today.setHours(0,0,0,0);
+    const diffTime = today.getTime() - start.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays >= 0 ? diffDays : 0;
+  };
+
+  const getRowClass = (status: string) => {
+    if (status === 'perdido') return 'row-perdido';
+    if (status === 'cierre' || status === 'cotización') return 'row-interes';
+    return '';
+  };
+
   if (user?.role !== 'admin') {
     return (
       <div className="users-page animate-fade-in">
@@ -227,24 +244,33 @@ export const UsersList: React.FC = () => {
                  <div className="mini-table-container">
                    <table className="custom-spreadsheet mini">
                      <thead>
-                       <tr>
-                         <th>Empresa</th>
-                         <th>Contacto Principal</th>
-                         <th>Fecha Creado</th>
-                         <th>Estado Actual</th>
-                       </tr>
+                        <tr>
+                          <th>Empresa</th>
+                          <th>Giro</th>
+                          <th>Contacto</th>
+                          <th>Email / Tel</th>
+                          <th>Estado</th>
+                          <th>Inicio</th>
+                          <th>Días</th>
+                        </tr>
                      </thead>
                      <tbody>
-                       {userClients.length === 0 ? (
-                         <tr><td colSpan={4} style={{ textAlign: 'center', padding: '2rem' }}>Este usuario no ha registrado ningún cliente aún.</td></tr>
-                       ) : userClients.map(c => (
-                         <tr key={c.id}>
-                           <td style={{ fontWeight: 600, color: 'white' }}>{c.company_name || 'Sin Nombre'}</td>
-                           <td>{c.contact_name || '--'}</td>
-                           <td>{formatDate(c.created_at)}</td>
-                           <td><span className="status-badge" data-status={c.status}>{c.status}</span></td>
-                         </tr>
-                       ))}
+                        {userClients.length === 0 ? (
+                          <tr><td colSpan={7} style={{ textAlign: 'center', padding: '2rem' }}>Este usuario no ha registrado ningún cliente aún.</td></tr>
+                        ) : userClients.map(c => (
+                          <tr key={c.id} className={getRowClass(c.status)}>
+                            <td style={{ fontWeight: 600, color: 'white' }}>{c.company_name || 'Sin Nombre'}</td>
+                            <td>{c.industry || '--'}</td>
+                            <td>{c.contact_name || '--'}</td>
+                            <td>
+                              <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>{c.email || '--'}</div>
+                              <div style={{ fontSize: '0.7rem', color: 'var(--accent)' }}>{c.phone || ''}</div>
+                            </td>
+                            <td><span className="status-badge" data-status={c.status}>{c.status}</span></td>
+                            <td>{c.first_contact_date || '--'}</td>
+                            <td style={{ textAlign: 'center' }}>{getDaysTranscurridos(c.first_contact_date)}</td>
+                          </tr>
+                        ))}
                      </tbody>
                    </table>
                  </div>

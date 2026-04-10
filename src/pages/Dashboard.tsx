@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { Users, TrendingUp, PhoneCall, AlertCircle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { supabase } from '../lib/supabase';
+import { triggerN8nWebhook } from '../lib/webhookUtils';
 import './Dashboard.css';
 
 export const Dashboard: React.FC = () => {
@@ -13,30 +14,68 @@ export const Dashboard: React.FC = () => {
   const [cotizaciones, setCotizaciones] = useState(0);
   const [inactivos, setInactivos] = useState(0);
   const [contactosInicial, setContactosInicial] = useState(0);
+  const [seguimientoPendiente, setSeguimientoPendiente] = useState(0);
+  
+  // New State for Admin Filtering
+  const [vendedoresList, setVendedoresList] = useState<any[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<string>('total');
+
+  // Fetch Vendedores (Admins only)
+  useEffect(() => {
+    if (isAdmin) {
+      const fetchVendedores = async () => {
+        const { data } = await supabase
+          .from('profiles')
+          .select('id, full_name, role')
+          .order('full_name');
+        setVendedoresList(data || []);
+      };
+      fetchVendedores();
+    }
+  }, [isAdmin]);
 
   useEffect(() => {
     const fetchData = async () => {
       if (!user) return;
       
-      const { data, error } = await supabase
-        .from('clients')
-        .select('status')
-        .eq('vendedor_id', user.id);
+      let query = supabase.from('clients').select('status, last_contact_date, vendedor_id');
+      
+      // LOGIC:
+      // If Vendedor: Always filter by their own ID
+      // If Admin: Filter by selectedUserId (if not 'total')
+      if (user.role !== 'admin') {
+        query = query.eq('vendedor_id', user.id);
+      } else if (selectedUserId !== 'total') {
+        query = query.eq('vendedor_id', selectedUserId);
+      }
+      
+      const { data, error } = await query;
       
       if (data) {
         setTotalClientes(data.length);
         setCotizaciones(data.filter(c => c.status === 'cotización').length);
         setInactivos(data.filter(c => c.status === 'perdido' || c.status === null).length);
         setContactosInicial(data.filter(c => c.status === 'contacto inicial').length);
+        
+        // Count clients with more than 7 days of inactivity
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        
+        const pending = data.filter(c => {
+          if (!c.last_contact_date) return true; // Never contacted = pending
+          return new Date(c.last_contact_date) < sevenDaysAgo;
+        }).length;
+        
+        setSeguimientoPendiente(pending);
       }
     };
     fetchData();
-  }, [user]);
+  }, [user, selectedUserId, isAdmin]);
 
   // Simulación de gráfico (idealmente agruparías por mes desde DB)
   const MOCK_DATA = [
     { name: 'Alta', cantidad: totalClientes },
-    { name: 'Contactos', cantidad: contactosInicial },
+    { name: 'Pendientes', cantidad: seguimientoPendiente },
     { name: 'Cotizando', cantidad: cotizaciones },
     { name: 'Inactivos', cantidad: inactivos },
   ];
@@ -44,10 +83,32 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="dashboard animate-fade-in">
       <div className="dashboard-header">
-        <h1>Dashboard Personal</h1>
-        <p className="text-muted">
-          Resumen de tus prospectos y actividades asignadas.
-        </p>
+        <div>
+          <h1>Dashboard {selectedUserId === 'total' ? 'Global' : 'Personal'}</h1>
+          <p className="text-muted">
+            {selectedUserId === 'total' 
+              ? 'Resumen global de todos los prospectos y actividades de la empresa.' 
+              : 'Resumen de los prospectos y actividades asignadas.'}
+          </p>
+        </div>
+
+        {isAdmin && (
+          <div className="admin-controls glass-panel">
+            <label>Filtrar por Usuario:</label>
+            <select 
+              value={selectedUserId} 
+              onChange={(e) => setSelectedUserId(e.target.value)}
+              className="user-selector"
+            >
+              <option value="total">📊 Ver Total Global</option>
+              {vendedoresList.map(v => (
+                <option key={v.id} value={v.id}>
+                  👤 {v.full_name} ({v.role})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       <div className="stats-grid">
@@ -84,14 +145,14 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="stat-card glass-panel">
-          <div className="stat-icon danger">
+        <div className="stat-card glass-panel highlight-stat">
+          <div className="stat-icon warning">
             <AlertCircle size={24} />
           </div>
           <div className="stat-details">
-            <h3>Perdidos/Inactivos</h3>
-            <span className="stat-value">{inactivos}</span>
-            <span className="stat-trend negative">Revisión requerida</span>
+            <h3>Seguimiento Pendiente</h3>
+            <span className="stat-value">{seguimientoPendiente}</span>
+            <span className="stat-trend negative">+7 días sin hablar</span>
           </div>
         </div>
       </div>
